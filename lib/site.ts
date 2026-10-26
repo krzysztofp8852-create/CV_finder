@@ -39,11 +39,11 @@ export const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Czy moje CV są przechowywane na serwerze?",
-    a: "Nie. Pliki są przetwarzane w pamięci RAM serwera i nigdzie nie są zapisywane na dysk ani w bazie. Treść jest wysyłana do OpenAI tylko po to, aby AI mogło wygenerować ocenę, a następnie odrzucana.",
+    a: "Aplikacja nie zapisuje CV - pliki są przetwarzane w pamięci serwera i nie trafiają na dysk ani do bazy. Aby wygenerować ocenę, tekst CV jest wysyłany do OpenAI API. OpenAI nie wykorzystuje danych z API do trenowania modeli, ale domyślnie może je przechowywać do 30 dni w celu wykrywania nadużyć. Wgrywając CV, odpowiadasz za posiadanie podstawy prawnej do przetwarzania danych kandydatów (RODO).",
   },
   {
     q: "Ile CV mogę wgrać naraz?",
-    a: "Do 30 plików w jednym zapytaniu, maksymalnie 8 MB każdy. Dla większych zestawów najlepiej podzielić rekrutację na partie - jakość rankingu jest najwyższa, gdy AI porównuje kandydatów między sobą w tym samym zapytaniu.",
+    a: "Do 30 plików naraz, maksymalnie 4 MB każdy. Dla większych zestawów podziel rekrutację na partie. Każde CV dostaje bezwzględną ocenę 0-100 względem opisu stanowiska, więc wyniki z różnych partii można porównywać.",
   },
   {
     q: "Czym CV Finder różni się od klasycznego ATS?",

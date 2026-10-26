@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { Analytics } from "@/components/Analytics";
 import {
   SITE_AUTHOR,
   SITE_DESCRIPTION,
@@ -137,33 +138,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteLd) }}
         />
 
-        {GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}', { anonymize_ip: true });
-              `}
-            </Script>
-          </>
-        )}
+        {GA_ID && <Analytics gaId={GA_ID} />}
 
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-white"
+          className="print:hidden sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-white"
         >
           Przejdź do treści
         </a>
 
-        <div className="relative min-h-screen overflow-hidden">
-          <div aria-hidden="true" className="absolute inset-0 bg-grid opacity-40" />
-          <div aria-hidden="true" className="absolute inset-0 bg-glow" />
+        <div className="relative min-h-screen overflow-hidden print:min-h-0 print:overflow-visible">
+          <div aria-hidden="true" className="absolute inset-0 bg-grid opacity-40 print:hidden" />
+          <div aria-hidden="true" className="absolute inset-0 bg-glow print:hidden" />
           <div className="relative z-10">{children}</div>
         </div>
       </body>

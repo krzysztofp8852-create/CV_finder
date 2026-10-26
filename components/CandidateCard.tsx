@@ -11,20 +11,15 @@ import {
   Trophy,
   Medal,
   Award,
+  ShieldAlert,
 } from "lucide-react";
 import { clsx } from "clsx";
 import type { RankedCandidate } from "@/lib/rankCvs";
+import { RECOMMENDATION_LABEL } from "@/lib/recommendation";
 
 type Props = {
   candidate: RankedCandidate;
   rank: number;
-};
-
-const RECOMMENDATION_LABEL: Record<RankedCandidate["recommendation"], string> = {
-  strong_match: "Świetne dopasowanie",
-  good_match: "Solidne dopasowanie",
-  weak_match: "Słabe dopasowanie",
-  no_match: "Brak dopasowania",
 };
 
 const RECOMMENDATION_STYLE: Record<RankedCandidate["recommendation"], string> = {
@@ -130,6 +125,26 @@ export function CandidateCard({ candidate, rank }: Props) {
           </div>
         </div>
 
+        {candidate.manipulationNote && (
+          <div
+            role="note"
+            className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 flex items-start gap-3"
+          >
+            <ShieldAlert
+              aria-hidden="true"
+              className="h-5 w-5 text-rose-400 shrink-0 mt-0.5"
+            />
+            <div className="text-sm text-rose-100/90 min-w-0">
+              <div className="font-medium">
+                Możliwa próba manipulacji oceną AI
+              </div>
+              <div className="text-xs text-rose-100/70 mt-1 break-words">
+                {candidate.manipulationNote} Sprawdź to CV ręcznie.
+              </div>
+            </div>
+          </div>
+        )}
+
         <p className="mt-4 text-sm text-white/70 leading-relaxed">
           {candidate.summary}
         </p>
@@ -137,7 +152,7 @@ export function CandidateCard({ candidate, rank }: Props) {
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="mt-4 inline-flex items-center gap-1 text-sm text-white/60 hover:text-white transition-colors"
+          className="mt-4 inline-flex items-center gap-1 text-sm text-white/60 hover:text-white transition-colors print:hidden"
         >
           {open ? "Zwiń szczegóły" : "Pokaż szczegóły"}
           {open ? (
@@ -148,36 +163,40 @@ export function CandidateCard({ candidate, rank }: Props) {
         </button>
       </div>
 
-      {open && (
-        <div className="border-t border-white/5 p-5 sm:p-6 grid sm:grid-cols-2 gap-5 bg-white/[0.015] animate-fade-in">
-          <Section
-            title="Mocne strony"
-            items={candidate.strengths}
-            icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
-            empty="Brak wskazanych mocnych stron."
-          />
-          <Section
-            title="Słabe strony / braki"
-            items={candidate.weaknesses}
-            icon={<XCircle className="h-4 w-4 text-rose-400" />}
-            empty="Brak istotnych słabych stron."
-          />
-          <Section
-            title="Pasujące umiejętności"
-            items={candidate.matchedSkills}
-            icon={<Sparkles className="h-4 w-4 text-accent" />}
-            empty="AI nie znalazło pasujących umiejętności."
-            chips
-          />
-          <Section
-            title="Brakujące umiejętności"
-            items={candidate.missingSkills}
-            icon={<Sparkles className="h-4 w-4 text-amber-400" />}
-            empty="Wszystkie wymagane umiejętności obecne."
-            chips
-          />
-        </div>
-      )}
+      {/* Zwinięte szczegóły i tak trafiają na wydruk. */}
+      <div
+        className={clsx(
+          "border-t border-white/5 p-5 sm:p-6 sm:grid-cols-2 gap-5 bg-white/[0.015] print:grid print:grid-cols-2",
+          open ? "grid animate-fade-in" : "hidden"
+        )}
+      >
+        <Section
+          title="Mocne strony"
+          items={candidate.strengths}
+          icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
+          empty="Brak wskazanych mocnych stron."
+        />
+        <Section
+          title="Słabe strony / braki"
+          items={candidate.weaknesses}
+          icon={<XCircle className="h-4 w-4 text-rose-400" />}
+          empty="Brak istotnych słabych stron."
+        />
+        <Section
+          title="Pasujące umiejętności"
+          items={candidate.matchedSkills}
+          icon={<Sparkles className="h-4 w-4 text-accent" />}
+          empty="AI nie znalazło pasujących umiejętności."
+          chips
+        />
+        <Section
+          title="Brakujące umiejętności"
+          items={candidate.missingSkills}
+          icon={<Sparkles className="h-4 w-4 text-amber-400" />}
+          empty="Wszystkie wymagane umiejętności obecne."
+          chips
+        />
+      </div>
     </div>
   );
 }

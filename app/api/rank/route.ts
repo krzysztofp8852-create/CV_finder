@@ -1,94 +1,98 @@
 import { NextResponse } from "next/server";
-import { parseCvFile, type ParsedCv, type ParseFailure } from "@/lib/parseCv";
-import { rankCvsWithAi } from "@/lib/rankCvs";
+import { guardRequest } from "@/lib/apiGuard";
+import {
+  MAX_CHARS_PER_CV,
+  MAX_FILES,
+  MAX_JOB_DESCRIPTION,
+  MIN_JOB_DESCRIPTION,
+} from "@/lib/limits";
+import { rankCvsWithAi, toPublicError, type CvInput } from "@/lib/rankCvs";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
 
-const MAX_FILES = 30;
-const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB
+// Same teksty CV (pliki są parsowane wcześniej przez /api/parse).
+const MAX_BODY_SIZE = 1024 * 1024; // 1 MB
+const MAX_ID_LENGTH = 64;
+const MAX_FILE_NAME_LENGTH = 255;
+
+function badRequest(error: string) {
+  return NextResponse.json({ error }, { status: 400 });
+}
+
+function readCvs(raw: unknown): CvInput[] | string {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return "Wgraj przynajmniej jedno CV.";
+  }
+  if (raw.length > MAX_FILES) {
+    return `Maksymalnie ${MAX_FILES} plików na raz.`;
+  }
+
+  const ids = new Set<string>();
+  const cvs: CvInput[] = [];
+  for (const item of raw) {
+    const { id, fileName, text } = (item ?? {}) as Record<string, unknown>;
+    if (
+      typeof id !== "string" ||
+      id.length === 0 ||
+      id.length > MAX_ID_LENGTH ||
+      typeof fileName !== "string" ||
+      typeof text !== "string"
+    ) {
+      return "Nieprawidłowe dane CV.";
+    }
+    if (ids.has(id)) {
+      return "Zduplikowany identyfikator CV.";
+    }
+    ids.add(id);
+    cvs.push({
+      id,
+      fileName: fileName.slice(0, MAX_FILE_NAME_LENGTH),
+      text: text.slice(0, MAX_CHARS_PER_CV + 100),
+    });
+  }
+  return cvs;
+}
 
 export async function POST(request: Request) {
+  const denied = guardRequest(request, "rank");
+  if (denied) return denied;
+
+  const contentLength = Number(request.headers.get("content-length"));
+  if (contentLength > MAX_BODY_SIZE) {
+    return NextResponse.json({ error: "Zapytanie jest za duże." }, { status: 413 });
+  }
+
   try {
-    const formData = await request.formData();
-    const jobDescription = String(formData.get("jobDescription") ?? "").trim();
-    const topOnlyRaw = String(formData.get("topOnly") ?? "false");
-    const topOnly = topOnlyRaw === "true";
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return badRequest("Nieprawidłowe dane zapytania.");
+    }
 
-    if (jobDescription.length < 20) {
-      return NextResponse.json(
-        { error: "Opis stanowiska musi mieć co najmniej 20 znaków." },
-        { status: 400 }
+    const jobDescription = String(body.jobDescription ?? "").trim();
+
+    if (jobDescription.length < MIN_JOB_DESCRIPTION) {
+      return badRequest(
+        `Opis stanowiska musi mieć co najmniej ${MIN_JOB_DESCRIPTION} znaków.`
+      );
+    }
+    if (jobDescription.length > MAX_JOB_DESCRIPTION) {
+      return badRequest(
+        `Opis stanowiska może mieć najwyżej ${MAX_JOB_DESCRIPTION} znaków.`
       );
     }
 
-    const files = formData
-      .getAll("files")
-      .filter((f): f is File => f instanceof File);
+    const cvs = readCvs(body.cvs);
+    if (typeof cvs === "string") return badRequest(cvs);
 
-    if (files.length === 0) {
-      return NextResponse.json(
-        { error: "Wgraj przynajmniej jedno CV." },
-        { status: 400 }
-      );
-    }
-
-    if (files.length > MAX_FILES) {
-      return NextResponse.json(
-        { error: `Maksymalnie ${MAX_FILES} plików na raz.` },
-        { status: 400 }
-      );
-    }
-
-    const tooLarge = files.find((f) => f.size > MAX_FILE_SIZE);
-    if (tooLarge) {
-      return NextResponse.json(
-        { error: `Plik ${tooLarge.name} jest większy niż 8 MB.` },
-        { status: 400 }
-      );
-    }
-
-    const outcomes = await Promise.all(
-      files.map(async (file) => {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        return parseCvFile(file.name, buffer, file.type);
-      })
-    );
-
-    const parsed: ParsedCv[] = [];
-    const failed: ParseFailure[] = [];
-    for (const outcome of outcomes) {
-      if (outcome.ok) parsed.push(outcome.cv);
-      else failed.push(outcome.failure);
-    }
-
-    if (parsed.length === 0) {
-      return NextResponse.json(
-        {
-          error:
-            "Nie udało się odczytać żadnego z wgranych plików. Sprawdź, czy CV nie są zeskanowanymi obrazami lub uszkodzonymi PDF-ami.",
-          failed,
-        },
-        { status: 400 }
-      );
-    }
-
-    const result = await rankCvsWithAi(jobDescription, parsed);
-    const ranking = topOnly ? result.ranking.slice(0, 3) : result.ranking;
-
-    return NextResponse.json({
-      ranking,
-      meta: {
-        ...result.meta,
-        topOnly,
-        cvCount: parsed.length,
-        failed,
-      },
-    });
+    // Zawsze pełny ranking - widok Top 3 przycina go po stronie klienta.
+    const result = await rankCvsWithAi(jobDescription, cvs);
+    return NextResponse.json(result);
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Nieznany błąd serwera.";
     console.error("[/api/rank] error:", err);
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = toPublicError(err);
+    return NextResponse.json({ error: message }, { status });
   }
 }

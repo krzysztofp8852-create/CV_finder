@@ -1,15 +1,36 @@
 "use client";
 
-import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { Upload, FileText, X } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useDropzone, type FileRejection } from "react-dropzone";
+import { Upload, FileText, X, AlertCircle } from "lucide-react";
 import { clsx } from "clsx";
+import { MAX_FILES, MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "@/lib/limits";
+import { plural } from "@/lib/plural";
+
+export type CvFile = {
+  id: string;
+  file: File;
+};
 
 type Props = {
-  files: File[];
-  onChange: (files: File[]) => void;
+  files: CvFile[];
+  onChange: (files: CvFile[]) => void;
   disabled?: boolean;
 };
+
+type Rejected = { fileName: string; reason: string };
+
+let nextId = 0;
+
+function newId(): string {
+  nextId++;
+  return `${Date.now().toString(36)}-${nextId}`;
+}
+
+// Ten sam plik wrzucony drugi raz - nie różne pliki o tej samej nazwie.
+function sameFile(a: File, b: File): boolean {
+  return a.name === b.name && a.size === b.size && a.lastModified === b.lastModified;
+}
 
 const ACCEPTED = {
   "application/pdf": [".pdf"],
@@ -25,14 +46,38 @@ function formatSize(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function rejectionReason(rejection: FileRejection): string {
+  const code = rejection.errors[0]?.code;
+  if (code === "file-invalid-type") return "nieobsługiwany format (tylko PDF, DOCX, TXT)";
+  if (code === "file-too-large") return `plik większy niż ${MAX_FILE_SIZE_LABEL}`;
+  return rejection.errors[0]?.message ?? "nie można dodać pliku";
+}
+
 export function Dropzone({ files, onChange, disabled }: Props) {
+  const [rejected, setRejected] = useState<Rejected[]>([]);
+
   const onDrop = useCallback(
-    (accepted: File[]) => {
-      const map = new Map<string, File>();
-      [...files, ...accepted].forEach((f) => {
-        map.set(`${f.name}-${f.size}`, f);
-      });
-      onChange(Array.from(map.values()));
+    (accepted: File[], rejections: FileRejection[]) => {
+      const next = [...files];
+      const skipped: Rejected[] = rejections.map((r) => ({
+        fileName: r.file.name,
+        reason: rejectionReason(r),
+      }));
+
+      for (const file of accepted) {
+        if (next.some((entry) => sameFile(entry.file, file))) continue;
+        if (next.length >= MAX_FILES) {
+          skipped.push({
+            fileName: file.name,
+            reason: `przekroczono limit ${MAX_FILES} plików`,
+          });
+          continue;
+        }
+        next.push({ id: newId(), file });
+      }
+
+      setRejected(skipped);
+      onChange(next);
     },
     [files, onChange]
   );
@@ -40,12 +85,13 @@ export function Dropzone({ files, onChange, disabled }: Props) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: ACCEPTED,
+    maxSize: MAX_FILE_SIZE,
     disabled,
     multiple: true,
   });
 
-  const removeFile = (key: string) => {
-    onChange(files.filter((f) => `${f.name}-${f.size}` !== key));
+  const removeFile = (id: string) => {
+    onChange(files.filter((entry) => entry.id !== id));
   };
 
   return (
@@ -72,19 +118,58 @@ export function Dropzone({ files, onChange, disabled }: Props) {
                 : "Przeciągnij CV lub kliknij, aby wybrać"}
             </p>
             <p className="text-sm text-white/50 mt-1">
-              PDF, DOCX lub TXT • do 8 MB na plik • do 30 plików
+              PDF, DOCX lub TXT • do {MAX_FILE_SIZE_LABEL} na plik • do {MAX_FILES}{" "}
+              plików
             </p>
           </div>
         </div>
       </div>
 
+      {rejected.length > 0 && (
+        <div
+          role="alert"
+          className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 flex items-start gap-3 animate-fade-in"
+        >
+          <AlertCircle
+            aria-hidden="true"
+            className="h-5 w-5 text-amber-400 shrink-0 mt-0.5"
+          />
+          <div className="text-sm text-amber-100/90 min-w-0 flex-1">
+            <div className="font-medium">
+              Nie dodano {rejected.length}{" "}
+              {plural(rejected.length, "pliku", "plików", "plików")}:
+            </div>
+            <ul className="text-xs text-amber-100/70 space-y-1 mt-1">
+              {rejected.map((r, i) => (
+                <li key={i} className="break-words">
+                  <span className="font-medium">{r.fileName}</span> — {r.reason}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button
+            type="button"
+            onClick={() => setRejected([])}
+            className="p-1 rounded-md hover:bg-white/10 shrink-0"
+            aria-label="Zamknij komunikat"
+          >
+            <X className="h-4 w-4 text-white/60" />
+          </button>
+        </div>
+      )}
+
       {files.length > 0 && (
         <div className="space-y-2 animate-fade-in">
           <div className="flex items-center justify-between text-sm text-white/60 px-1">
-            <span>Wgrane CV: {files.length}</span>
+            <span>
+              Wgrane CV: {files.length} / {MAX_FILES}
+            </span>
             <button
               type="button"
-              onClick={() => onChange([])}
+              onClick={() => {
+                onChange([]);
+                setRejected([]);
+              }}
               disabled={disabled}
               className="text-white/40 hover:text-white/80 transition-colors disabled:opacity-30"
             >
@@ -92,11 +177,10 @@ export function Dropzone({ files, onChange, disabled }: Props) {
             </button>
           </div>
           <ul className="space-y-2 max-h-64 overflow-y-auto pr-1">
-            {files.map((f) => {
-              const key = `${f.name}-${f.size}`;
+            {files.map(({ id, file: f }) => {
               return (
                 <li
-                  key={key}
+                  key={id}
                   className="glass rounded-xl px-4 py-3 flex items-center gap-3 group"
                 >
                   <div className="rounded-lg bg-white/5 p-2">
@@ -108,9 +192,9 @@ export function Dropzone({ files, onChange, disabled }: Props) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => removeFile(key)}
+                    onClick={() => removeFile(id)}
                     disabled={disabled}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md hover:bg-white/10 disabled:opacity-30"
+                    className="reveal-on-hover transition-opacity p-1 rounded-md hover:bg-white/10 disabled:opacity-30"
                     aria-label={`Usuń ${f.name}`}
                   >
                     <X className="h-4 w-4 text-white/60" />

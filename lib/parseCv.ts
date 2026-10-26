@@ -1,4 +1,5 @@
 import mammoth from "mammoth";
+import { MAX_CHARS_PER_CV } from "./limits";
 
 export type ParsedCv = {
   fileName: string;
@@ -14,8 +15,6 @@ export type ParseFailure = {
 export type ParseOutcome =
   | { ok: true; cv: ParsedCv }
   | { ok: false; failure: ParseFailure };
-
-const MAX_CHARS_PER_CV = 15000;
 
 function cleanText(text: string): string {
   return text

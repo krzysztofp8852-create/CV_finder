@@ -72,6 +72,17 @@
     background: hsl(240 5% 22%);
   }
 
+  /* Ukryte do najechania myszą; na ekranach dotykowych i przy fokusie z klawiatury widoczne. */
+  @media (hover: hover) {
+    .reveal-on-hover {
+      opacity: 0;
+    }
+    .group:hover .reveal-on-hover:not(:disabled),
+    .reveal-on-hover:focus-visible {
+      opacity: 1;
+    }
+  }
+
   .input-field {
     @apply w-full rounded-xl px-4 py-3 outline-none transition-all;
     background: hsl(var(--muted));
@@ -118,4 +129,27 @@
       rgba(6, 182, 212, 0.12) 0%,
       transparent 40%
     );
+}
+
+/* Wydruk / zapis do PDF: tylko wyniki, ciemny motyw zamieniony na czarno-biały. */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  #results,
+  #results * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    animation: none !important;
+  }
+
+  #results .glass {
+    border: 1px solid #bbb !important;
+  }
 }

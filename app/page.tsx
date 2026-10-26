@@ -10,6 +10,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import { CvFinder } from "@/components/CvFinder";
+import { CookieSettingsButton } from "@/components/Analytics";
 import { FAQ, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_TAGLINE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -37,7 +38,7 @@ const FEATURES = [
   {
     icon: ShieldCheck,
     title: "Prywatność",
-    text: "Pliki przetwarzane wyłącznie w pamięci serwera, nigdzie nie są zapisywane na dysk ani w bazie.",
+    text: "Aplikacja nie zapisuje CV na dysku ani w bazie. Do oceny tekst trafia do OpenAI API, które nie używa go do trenowania modeli.",
   },
   {
     icon: Globe,
@@ -55,7 +56,7 @@ const HOW_IT_WORKS = [
   {
     n: 1,
     title: "Wgraj CV",
-    text: "Przeciągnij do 30 plików (PDF, DOCX, TXT) lub wybierz je z dysku. Maksymalnie 8 MB na plik.",
+    text: "Przeciągnij do 30 plików (PDF, DOCX, TXT) lub wybierz je z dysku. Maksymalnie 4 MB na plik.",
   },
   {
     n: 2,
@@ -65,7 +66,7 @@ const HOW_IT_WORKS = [
   {
     n: 3,
     title: "Wybierz tryb",
-    text: "Pełen ranking wszystkich kandydatów albo tylko Top 3 najlepiej dopasowanych osób.",
+    text: "Pełen ranking wszystkich kandydatów albo tylko Top 3 najlepiej dopasowanych osób. Widok możesz przełączyć także po analizie.",
   },
   {
     n: 4,
@@ -146,9 +147,9 @@ export default function HomePage() {
 
       <main
         id="main"
-        className="container mx-auto max-w-5xl px-4 sm:px-6 py-10 sm:py-16"
+        className="container mx-auto max-w-5xl px-4 sm:px-6 py-10 sm:py-16 print:p-0"
       >
-        <header className="text-center mb-12 sm:mb-16 animate-fade-in">
+        <header className="text-center mb-12 sm:mb-16 animate-fade-in print:hidden">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-6 text-xs text-white/70">
             <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-accent" />
             Wspomagane przez AI
@@ -168,7 +169,7 @@ export default function HomePage() {
 
         <section
           aria-labelledby="how-it-works"
-          className="mt-24 sm:mt-32 scroll-mt-8"
+          className="mt-24 sm:mt-32 scroll-mt-8 print:hidden"
           id="jak-to-dziala"
         >
           <div className="text-center mb-10">
@@ -204,7 +205,7 @@ export default function HomePage() {
 
         <section
           aria-labelledby="features"
-          className="mt-24 sm:mt-32 scroll-mt-8"
+          className="mt-24 sm:mt-32 scroll-mt-8 print:hidden"
           id="funkcje"
         >
           <div className="text-center mb-10">
@@ -238,7 +239,7 @@ export default function HomePage() {
 
         <section
           aria-labelledby="faq"
-          className="mt-24 sm:mt-32 scroll-mt-8"
+          className="mt-24 sm:mt-32 scroll-mt-8 print:hidden"
           id="faq"
         >
           <div className="text-center mb-10">
@@ -278,7 +279,7 @@ export default function HomePage() {
 
         <section
           aria-labelledby="cta"
-          className="mt-24 sm:mt-32 relative overflow-hidden rounded-3xl glass p-8 sm:p-12 text-center"
+          className="mt-24 sm:mt-32 relative overflow-hidden rounded-3xl glass p-8 sm:p-12 text-center print:hidden"
         >
           <div
             aria-hidden="true"
@@ -311,15 +312,20 @@ export default function HomePage() {
           </a>
         </section>
 
-        <footer className="mt-20 pb-4 text-center text-xs text-white/40">
+        <footer className="mt-20 pb-4 text-center text-xs text-white/40 print:hidden">
           <p>
             © {new Date().getFullYear()} {SITE_NAME}. Zbudowane z Next.js +
             OpenAI.
           </p>
           <p className="mt-1 text-white/30">
-            Aplikacja nie przechowuje wgranych CV - są one przetwarzane wyłącznie
-            w pamięci serwera w celu wygenerowania rankingu.
+            Aplikacja nie przechowuje wgranych CV. Do wygenerowania rankingu
+            tekst CV jest przesyłany do OpenAI API.
           </p>
+          {process.env.NEXT_PUBLIC_GA_ID && (
+            <p className="mt-2 text-white/30">
+              <CookieSettingsButton />
+            </p>
+          )}
         </footer>
       </main>
     </>
