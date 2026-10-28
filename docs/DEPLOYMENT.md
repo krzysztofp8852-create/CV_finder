@@ -21,13 +21,16 @@ Przed publicznym wdrożeniem ustaw `ACCESS_PASSWORD` - bez niego każdy, kto zna
 
 ### Krok 1 — Deploy na Vercel (najszybciej)
 
+Repo zawiera dwie aplikacje: frontend Next.js w `frontend/` i backend FastAPI w `backend/`. Plik [`vercel.json`](../vercel.json) deklaruje je jako [Vercel Services](https://vercel.com/docs/services) (funkcja w becie) i kieruje `/api/*` do backendu, a resztę ruchu do frontendu, w jednej domenie.
+
 1. Wrzuć projekt na GitHub.
-2. Wejdź na [vercel.com](https://vercel.com/new) i zaimportuj repo.
-3. Dodaj zmienne środowiskowe w Vercel: `OPENAI_API_KEY`, `ACCESS_PASSWORD`, `NEXT_PUBLIC_SITE_URL` (np. `https://cv-finder.vercel.app` lub Twoja domena).
-4. Po deploy'u Vercel poda Ci URL produkcyjny.
+2. Wejdź na [vercel.com](https://vercel.com/new) i zaimportuj repo. **Root Directory** zostaw na katalogu głównym repo, żeby Vercel znalazł `vercel.json` i obie usługi.
+   - Jeśli projekt na Vercelu już istnieje i był skonfigurowany jako zwykły Next.js, w **Settings → Build and Deployment** ustaw Root Directory na katalog główny i usuń nadpisane Framework Preset / Build Command, tak żeby konfiguracja pochodziła z `vercel.json`.
+3. Dodaj zmienne środowiskowe w Vercel: `OPENAI_API_KEY`, `ACCESS_PASSWORD`, `NEXT_PUBLIC_SITE_URL` (np. `https://cv-finder.vercel.app` lub Twoja domena). Zmienne projektu są dostępne dla obu usług.
+4. Po deployu sprawdź `https://<twoja-domena>/api/health` - powinno zwrócić `{"status":"ok"}`.
 5. (Opcjonalnie) Dodaj własną domenę w **Settings → Domains**.
 
-> Aplikacja działa też na każdej platformie obsługującej Node.js: Railway, Render, Fly.io, Google Cloud Run, AWS Amplify, własny VPS.
+> Lokalnie całość można też uruchomić przez `vercel dev -L` z katalogu głównego. Prostsza droga bez CLI Vercela to `make dev-backend` i `make dev-frontend` (opis w README).
 
 ### Krok 2 — Google Search Console
 
@@ -56,4 +59,4 @@ W Bing Webmaster Tools jest opcja „Import from Google Search Console" - jednym
 ## Pozostałe uwagi
 
 - `X-Robots-Tag` można dodać w `next.config.mjs`, żeby wyłączyć indeksację wybranych ścieżek.
-- Limit zapytań na IP jest trzymany w pamięci procesu: na jednym serwerze Node działa dokładnie, na serverless (Vercel) każda instancja liczy osobno.
+- Limit zapytań na IP jest trzymany w pamięci procesu: na jednym serwerze działa dokładnie, na serverless (Vercel) każda instancja liczy osobno.

@@ -1,4 +1,4 @@
-import type { RankedCandidate } from "./rankCvs";
+import type { RankedCandidate } from "./types";
 import { RECOMMENDATION_LABEL } from "./recommendation";
 
 const HEADERS = [
