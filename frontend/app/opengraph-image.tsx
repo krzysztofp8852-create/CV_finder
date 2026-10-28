@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const alt = "CV Finder - Znajdź idealnego kandydata z AI";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -15,9 +14,10 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          padding: "80px",
-          background:
-            "radial-gradient(circle at 20% 20%, rgba(168,85,247,0.35) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(6,182,212,0.30) 0%, transparent 50%), #0a0a0f",
+          padding: "64px 80px",
+          backgroundColor: "#0a0a0f",
+          backgroundImage:
+            "radial-gradient(circle at 20% 20%, rgba(168,85,247,0.35) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(6,182,212,0.30) 0%, transparent 50%)",
           color: "white",
           fontFamily:
             "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
@@ -47,15 +47,16 @@ export default function OpenGraphImage() {
 
         <div
           style={{
-            fontSize: 96,
+            fontSize: 88,
             fontWeight: 800,
             lineHeight: 1.05,
             letterSpacing: "-0.03em",
             display: "flex",
             flexWrap: "wrap",
+            columnGap: 24,
           }}
         >
-          <span>Znajdź&nbsp;</span>
+          <span>Znajdź</span>
           <span
             style={{
               background:
@@ -66,16 +67,17 @@ export default function OpenGraphImage() {
           >
             idealnego
           </span>
-          <span>&nbsp;kandydata.</span>
+          <span>kandydata.</span>
         </div>
 
         <div
           style={{
-            fontSize: 34,
-            marginTop: 36,
+            fontSize: 30,
+            marginTop: 32,
             color: "rgba(255,255,255,0.75)",
             lineHeight: 1.4,
             maxWidth: 950,
+            display: "flex",
           }}
         >
           Wgraj CV. Opisz stanowisko. AI uszereguje kandydatów od najlepszego
@@ -84,7 +86,7 @@ export default function OpenGraphImage() {
 
         <div
           style={{
-            marginTop: "auto",
+            marginTop: 36,
             display: "flex",
             gap: 20,
             fontSize: 22,
