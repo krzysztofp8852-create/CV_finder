@@ -2,7 +2,7 @@
 
 **LLM-powered CV screening: upload a stack of CVs, describe the role, get a ranked shortlist with reasons.**
 
-[🇵🇱 Wersja polska](README.pl.md)
+**[▶ Live demo: cv-finder.vercel.app](https://cv-finder.vercel.app)** · [🇵🇱 Wersja polska](README.pl.md)
 
 ![Next.js 14](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)

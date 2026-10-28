@@ -2,7 +2,7 @@
 
 **Selekcja CV z pomocą LLM: wgrywasz CV, opisujesz stanowisko i dostajesz ranking kandydatów z uzasadnieniem.**
 
-[🇬🇧 English version](README.md)
+**[▶ Demo na żywo: cv-finder.vercel.app](https://cv-finder.vercel.app)** · [🇬🇧 English version](README.md)
 
 ![Next.js 14](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)
