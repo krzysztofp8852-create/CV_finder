@@ -35,7 +35,7 @@ export const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Jakie formaty plików są obsługiwane?",
-    a: "PDF, DOCX i TXT. Aplikacja używa zarówno pdf-parse, jak i pdfjs-dist (silnik Firefoxa) jako fallback, dzięki czemu odczyta nawet PDF-y z nietypowymi tablicami XRef. Zeskanowane obrazy (bez warstwy tekstowej) wymagają OCR i są pomijane z ostrzeżeniem.",
+    a: "PDF, DOCX i TXT. Aplikacja używa pypdf, a w razie problemów pdfminer.six jako fallbacku, dzięki czemu odczyta nawet PDF-y z nietypowymi tablicami XRef. Zeskanowane obrazy (bez warstwy tekstowej) wymagają OCR i są pomijane z ostrzeżeniem.",
   },
   {
     q: "Czy moje CV są przechowywane na serwerze?",

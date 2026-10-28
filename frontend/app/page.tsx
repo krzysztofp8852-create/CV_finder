@@ -48,7 +48,7 @@ const FEATURES = [
   {
     icon: Upload,
     title: "PDF, DOCX, TXT",
-    text: "Wgrywaj różne formaty jednocześnie. Wbudowany fallback PDF.js radzi sobie nawet z uszkodzonymi plikami.",
+    text: "Wgrywaj różne formaty jednocześnie. Dwa silniki odczytu PDF radzą sobie nawet z uszkodzonymi plikami.",
   },
 ];
 
@@ -314,8 +314,8 @@ export default function HomePage() {
 
         <footer className="mt-20 pb-4 text-center text-xs text-white/40 print:hidden">
           <p>
-            © {new Date().getFullYear()} {SITE_NAME}. Zbudowane z Next.js +
-            OpenAI.
+            © {new Date().getFullYear()} {SITE_NAME}. Zbudowane z Next.js, FastAPI
+            i OpenAI.
           </p>
           <p className="mt-1 text-white/30">
             Aplikacja nie przechowuje wgranych CV. Do wygenerowania rankingu

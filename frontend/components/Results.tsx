@@ -3,7 +3,7 @@
 import { AlertCircle, Download, Printer } from "lucide-react";
 import { clsx } from "clsx";
 import { CandidateCard } from "@/components/CandidateCard";
-import type { RankedCandidate } from "@/lib/rankCvs";
+import type { RankedCandidate } from "@/lib/types";
 import { downloadCsv, rankingToCsv } from "@/lib/exportCsv";
 import { plural } from "@/lib/plural";
 

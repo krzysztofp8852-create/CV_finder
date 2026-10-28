@@ -9,3 +9,6 @@ build
 dist
 .vercel
 next-env.d.ts
+__pycache__
+.venv
+.pytest_cache

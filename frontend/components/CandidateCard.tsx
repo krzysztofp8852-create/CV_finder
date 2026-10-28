@@ -14,7 +14,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { clsx } from "clsx";
-import type { RankedCandidate } from "@/lib/rankCvs";
+import type { RankedCandidate } from "@/lib/types";
 import { RECOMMENDATION_LABEL } from "@/lib/recommendation";
 
 type Props = {

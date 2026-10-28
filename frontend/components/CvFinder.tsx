@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Dropzone, type CvFile } from "@/components/Dropzone";
 import { Results, type ParseFailure, type RankingView } from "@/components/Results";
-import type { CvInput } from "@/lib/rankCvs";
+import type { CvInput } from "@/lib/types";
 import {
   MAX_FILE_SIZE,
   MAX_FILE_SIZE_LABEL,

@@ -1,4 +1,4 @@
-// Limity współdzielone przez klienta i serwer - jedno źródło prawdy.
+// Limity aplikacji. Wartości muszą się zgadzać z backend/app/limits.py.
 
 export const MAX_FILES = 30;
 
