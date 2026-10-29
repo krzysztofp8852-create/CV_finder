@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
 import {
@@ -12,15 +13,35 @@ import {
   SITE_URL,
 } from "@/lib/site";
 
+const sans = Instrument_Sans({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const serif = Instrument_Serif({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GOOGLE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION;
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0f",
+  themeColor: "#f4f1ea",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "dark",
+  colorScheme: "light",
 };
 
 export const metadata: Metadata = {
@@ -123,8 +144,12 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="pl" dir="ltr">
-      <body>
+    <html
+      lang="pl"
+      dir="ltr"
+      className={`${sans.variable} ${serif.variable} ${mono.variable}`}
+    >
+      <body className="grain">
         <Script
           id="ld-organization"
           type="application/ld+json"
@@ -142,16 +167,12 @@ export default function RootLayout({
 
         <a
           href="#main"
-          className="print:hidden sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-white"
+          className="print:hidden sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-3 focus:py-2 focus:text-paper"
         >
           Przejdź do treści
         </a>
 
-        <div className="relative min-h-screen overflow-hidden print:min-h-0 print:overflow-visible">
-          <div aria-hidden="true" className="absolute inset-0 bg-grid opacity-40 print:hidden" />
-          <div aria-hidden="true" className="absolute inset-0 bg-glow print:hidden" />
-          <div className="relative z-10">{children}</div>
-        </div>
+        <div className="relative z-10 min-h-screen print:min-h-0">{children}</div>
       </body>
     </html>
   );

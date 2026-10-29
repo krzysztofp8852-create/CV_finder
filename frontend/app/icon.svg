@@ -1,13 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#06b6d4"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#0a0a0f"/>
-  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="url(#g)" stroke-width="2"/>
-  <path d="M18 22h22a4 4 0 0 1 4 4v18a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V22z" fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M22 18h14l4 4" fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-  <path d="M24 32l5 5 9-11" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="64" height="64" rx="14" fill="#1c1a17"/>
+  <circle cx="18" cy="21" r="4" fill="#5fa37f"/>
+  <rect x="27" y="18" width="23" height="6" rx="3" fill="#f4f1ea"/>
+  <rect x="14" y="29" width="36" height="6" rx="3" fill="#f4f1ea" opacity="0.7"/>
+  <rect x="14" y="40" width="26" height="6" rx="3" fill="#f4f1ea" opacity="0.45"/>
 </svg>

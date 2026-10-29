@@ -8,24 +8,44 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: "hsl(var(--card))",
-        muted: "hsl(var(--muted))",
-        border: "hsl(var(--border))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        paper: "rgb(var(--paper) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        ink: {
+          DEFAULT: "rgb(var(--ink) / <alpha-value>)",
+          soft: "rgb(var(--ink-soft) / <alpha-value>)",
+        },
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        line: {
+          DEFAULT: "rgb(var(--line) / <alpha-value>)",
+          strong: "rgb(var(--line-strong) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          soft: "rgb(var(--accent-soft) / <alpha-value>)",
+        },
+        good: "rgb(var(--good) / <alpha-value>)",
+        warn: {
+          DEFAULT: "rgb(var(--warn) / <alpha-value>)",
+          soft: "rgb(var(--warn-soft) / <alpha-value>)",
+        },
+        danger: {
+          DEFAULT: "rgb(var(--danger) / <alpha-value>)",
+          soft: "rgb(var(--danger-soft) / <alpha-value>)",
         },
       },
+      fontFamily: {
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+      boxShadow: {
+        sheet:
+          "0 1px 0 rgb(var(--ink) / 0.04), 0 12px 32px -16px rgb(var(--shadow) / 0.28)",
+      },
       animation: {
-        "fade-in": "fadeIn 0.4s ease-out",
-        "slide-up": "slideUp 0.4s ease-out",
-        "pulse-slow": "pulse 3s ease-in-out infinite",
+        "fade-in": "fadeIn 0.4s ease-out both",
+        "slide-up": "slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
+        indeterminate: "indeterminate 1.4s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -33,8 +53,12 @@ const config: Config = {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        indeterminate: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(250%)" },
         },
       },
     },

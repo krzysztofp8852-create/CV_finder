@@ -4,6 +4,8 @@ export const SITE_URL = (
 
 export const SITE_NAME = "CV Finder";
 
+export const REPO_URL = "https://github.com/krzysztofp8852-create/CV_finder";
+
 export const SITE_TAGLINE = "Znajdź idealnego kandydata z AI";
 
 export const SITE_DESCRIPTION =

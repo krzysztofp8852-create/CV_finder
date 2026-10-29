@@ -37,28 +37,23 @@ export function Results({ result, topOnly, onTopOnlyChange }: Props) {
     <section
       id="results"
       aria-label="Wyniki rankingu"
-      className="mt-16 sm:mt-20 space-y-6 animate-fade-in scroll-mt-8 print:mt-0"
+      className="mt-16 sm:mt-20 animate-fade-in scroll-mt-8 print:mt-0"
     >
-      <div className="flex items-end justify-between gap-4 flex-wrap">
+      <div className="flex items-end justify-between gap-x-6 gap-y-4 flex-wrap pb-6 border-b border-line-strong">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold">
-            {topOnly ? "Top 3 kandydatów" : "Ranking kandydatów"}
+          <p className="font-mono text-xs text-muted">
+            {result.meta.cvCount} CV · {result.meta.model}
+          </p>
+          <h2 className="mt-2 font-serif text-4xl sm:text-5xl tracking-[-0.01em]">
+            {topOnly ? "Top 3" : "Ranking"}
           </h2>
-          <p className="text-white/50 text-sm mt-1">
-            Oceniono {result.meta.cvCount} CV • model{" "}
-            <code className="text-accent">{result.meta.model}</code>
-          </p>
-          <p className="text-white/40 text-xs mt-2">
-            Ocena AI ma charakter pomocniczy i może zawierać błędy. Ostateczną
-            decyzję o kandydacie podejmuje człowiek.
-          </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 print:hidden">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 print:hidden">
           <div
             role="radiogroup"
             aria-label="Widok wyników"
-            className="inline-flex rounded-xl border border-white/10 p-1 text-sm"
+            className="inline-flex rounded-xl border border-line-strong bg-surface p-1 text-sm"
           >
             {[
               { value: false, label: "Wszyscy" },
@@ -71,50 +66,47 @@ export function Results({ result, topOnly, onTopOnlyChange }: Props) {
                 aria-checked={topOnly === option.value}
                 onClick={() => onTopOnlyChange(option.value)}
                 className={clsx(
-                  "px-3 py-1.5 rounded-lg transition-colors",
+                  "px-3.5 py-1.5 rounded-lg transition duration-200",
                   topOnly === option.value
-                    ? "bg-primary/20 text-white"
-                    : "text-white/50 hover:text-white/80"
+                    ? "bg-ink text-paper"
+                    : "text-ink-soft hover:text-ink hover:bg-ink/[0.04]"
                 )}
               >
                 {option.label}
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            onClick={exportCsv}
-            className="btn-secondary text-sm px-4 py-2"
-          >
+          <button type="button" onClick={exportCsv} className="btn-text">
             <Download aria-hidden="true" className="h-4 w-4" />
-            CSV
+            Eksport CSV
           </button>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="btn-secondary text-sm px-4 py-2"
-          >
+          <button type="button" onClick={() => window.print()} className="btn-text">
             <Printer aria-hidden="true" className="h-4 w-4" />
             Drukuj / PDF
           </button>
         </div>
       </div>
 
+      <p className="mt-4 text-sm text-muted max-w-2xl">
+        Ocena modelu jest pomocnicza i może zawierać błędy. Decyzję o kandydacie
+        podejmuje człowiek.
+      </p>
+
       {failedCount > 0 && (
         <div
           role="status"
-          className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 flex items-start gap-3"
+          className="mt-5 rounded-xl border border-warn/25 bg-warn-soft px-4 py-3 flex items-start gap-3"
         >
           <AlertCircle
             aria-hidden="true"
-            className="h-5 w-5 text-amber-400 shrink-0 mt-0.5"
+            className="h-5 w-5 text-warn shrink-0 mt-0.5"
           />
-          <div className="text-sm text-amber-100/90 space-y-1 min-w-0 flex-1">
+          <div className="text-sm text-ink space-y-1 min-w-0 flex-1">
             <div className="font-medium">
               Pominięto {failedCount} {plural(failedCount, "plik", "pliki", "plików")}{" "}
               (nie udało się odczytać tekstu):
             </div>
-            <ul className="text-xs text-amber-100/70 space-y-1 mt-1">
+            <ul className="text-xs text-ink-soft space-y-1 mt-1">
               {result.meta.failed.map((f) => (
                 <li key={f.id} className="break-words">
                   <span className="font-medium">{f.fileName}</span> — {f.reason}
@@ -125,9 +117,13 @@ export function Results({ result, topOnly, onTopOnlyChange }: Props) {
         </div>
       )}
 
-      <ol className="space-y-4 list-none p-0">
+      <ol className="mt-6 space-y-3 list-none p-0">
         {visible.map((c, i) => (
-          <li key={c.id} className="print:break-inside-avoid">
+          <li
+            key={c.id}
+            className="print:break-inside-avoid animate-slide-up"
+            style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}
+          >
             <CandidateCard candidate={c} rank={i + 1} />
           </li>
         ))}

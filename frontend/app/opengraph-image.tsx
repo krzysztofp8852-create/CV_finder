@@ -1,8 +1,23 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "CV Finder - Znajdź idealnego kandydata z AI";
+export const alt = "CV Finder - od stosu CV do krótkiej listy w minutę";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const PAPER = "#f4f1ea";
+const SURFACE = "#fbfaf6";
+const INK = "#1c1a17";
+const INK_SOFT = "#4a453e";
+const MUTED = "#7a7368";
+const LINE = "#e2dcd0";
+const ACCENT = "#2f6b4f";
+
+const ROWS = [
+  { name: "Marta Wiśniewska", score: 95, color: ACCENT },
+  { name: "Paweł Dąbrowski", score: 80, color: ACCENT },
+  { name: "Tomasz Zieliński", score: 60, color: "#4b6a88" },
+  { name: "Karolina Nowak", score: 30, color: "#a06a1b" },
+];
 
 export default function OpenGraphImage() {
   return new ImageResponse(
@@ -12,117 +27,69 @@ export default function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "64px 80px",
-          backgroundColor: "#0a0a0f",
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, rgba(168,85,247,0.35) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(6,182,212,0.30) 0%, transparent 50%)",
-          color: "white",
-          fontFamily:
-            "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+          alignItems: "center",
+          gap: 64,
+          padding: "0 80px",
+          backgroundColor: PAPER,
+          color: INK,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-            fontSize: 24,
-            color: "rgba(255,255,255,0.7)",
-            marginBottom: 32,
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+          <div style={{ display: "flex", fontSize: 22, color: MUTED, letterSpacing: 3 }}>
+            CV FINDER
+          </div>
           <div
             style={{
-              width: 14,
-              height: 14,
-              borderRadius: 999,
-              background:
-                "linear-gradient(135deg, #a855f7 0%, #06b6d4 100%)",
+              display: "flex",
+              flexWrap: "wrap",
+              columnGap: 18,
+              marginTop: 28,
+              fontSize: 72,
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
             }}
-          />
-          CV Finder
+          >
+            <span>Od stosu CV do</span>
+            <span style={{ color: ACCENT }}>krótkiej listy</span>
+            <span>w minutę.</span>
+          </div>
+          <div style={{ display: "flex", marginTop: 32, fontSize: 28, lineHeight: 1.4, color: INK_SOFT }}>
+            Ranking kandydatów 0–100 z uzasadnieniem, mocnymi stronami i brakami.
+          </div>
         </div>
 
         <div
           style={{
-            fontSize: 88,
-            fontWeight: 800,
-            lineHeight: 1.05,
-            letterSpacing: "-0.03em",
+            width: 400,
             display: "flex",
-            flexWrap: "wrap",
-            columnGap: 24,
+            flexDirection: "column",
+            padding: "16px 28px",
+            borderRadius: 24,
+            border: `1px solid ${LINE}`,
+            backgroundColor: SURFACE,
           }}
         >
-          <span>Znajdź</span>
-          <span
-            style={{
-              background:
-                "linear-gradient(135deg, #a855f7 0%, #06b6d4 100%)",
-              backgroundClip: "text",
-              color: "transparent",
-            }}
-          >
-            idealnego
-          </span>
-          <span>kandydata.</span>
-        </div>
-
-        <div
-          style={{
-            fontSize: 30,
-            marginTop: 32,
-            color: "rgba(255,255,255,0.75)",
-            lineHeight: 1.4,
-            maxWidth: 950,
-            display: "flex",
-          }}
-        >
-          Wgraj CV. Opisz stanowisko. AI uszereguje kandydatów od najlepszego
-          do najgorszego w kilkanaście sekund.
-        </div>
-
-        <div
-          style={{
-            marginTop: 36,
-            display: "flex",
-            gap: 20,
-            fontSize: 22,
-            color: "rgba(255,255,255,0.55)",
-          }}
-        >
-          <div
-            style={{
-              padding: "10px 18px",
-              borderRadius: 999,
-              border: "1px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.05)",
-            }}
-          >
-            PDF · DOCX · TXT
-          </div>
-          <div
-            style={{
-              padding: "10px 18px",
-              borderRadius: 999,
-              border: "1px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.05)",
-            }}
-          >
-            Ranking 0-100
-          </div>
-          <div
-            style={{
-              padding: "10px 18px",
-              borderRadius: 999,
-              border: "1px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.05)",
-            }}
-          >
-            Top 3 lub pełna lista
-          </div>
+          {ROWS.map((row, i) => (
+            <div
+              key={row.name}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 18,
+                padding: "16px 0",
+                borderTop: i === 0 ? "none" : `1px solid ${LINE}`,
+              }}
+            >
+              <div style={{ display: "flex", width: 24, fontSize: 28, color: MUTED }}>{i + 1}</div>
+              <div style={{ display: "flex", flex: 1, fontSize: 22 }}>{row.name}</div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", width: 72 }}>
+                <div style={{ display: "flex", fontSize: 26 }}>{row.score}</div>
+                <div style={{ display: "flex", width: 72, height: 5, marginTop: 6, borderRadius: 3, backgroundColor: LINE }}>
+                  <div style={{ width: `${row.score}%`, height: 5, borderRadius: 3, backgroundColor: row.color }} />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     ),

@@ -75,12 +75,12 @@ export function Analytics({ gaId }: { gaId: string }) {
           aria-describedby="consent-text"
           className="fixed inset-x-0 bottom-0 z-50 p-4 print:hidden"
         >
-          <div className="glass bg-[#0f0f16]/95 mx-auto max-w-3xl rounded-2xl p-5 shadow-2xl flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="sheet mx-auto max-w-3xl p-5 flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="flex-1 min-w-0">
               <h2 id="consent-title" className="text-sm font-semibold">
                 Pliki cookie
               </h2>
-              <p id="consent-text" className="text-xs text-white/60 mt-1 leading-relaxed">
+              <p id="consent-text" className="text-xs text-ink-soft mt-1 leading-relaxed">
                 Za Twoją zgodą używamy Google Analytics do anonimowych statystyk
                 odwiedzin. Bez zgody nie zapisujemy żadnych plików cookie
                 analitycznych, a aplikacja działa tak samo.
@@ -97,7 +97,7 @@ export function Analytics({ gaId }: { gaId: string }) {
               <button
                 type="button"
                 onClick={() => decide("granted")}
-                className="btn-secondary flex-1 sm:flex-none"
+                className="btn-primary flex-1 sm:flex-none"
               >
                 Akceptuj
               </button>
@@ -118,7 +118,7 @@ export function CookieSettingsButton() {
         saveConsent(null);
         window.dispatchEvent(new Event(RESET_EVENT));
       }}
-      className="underline underline-offset-2 hover:text-white/70 transition-colors"
+      className="hover:text-ink transition-colors"
     >
       Ustawienia cookies
     </button>

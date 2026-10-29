@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import {
-  Sparkles,
-  Upload,
-  Briefcase,
-  Trophy,
-  ShieldCheck,
-  Zap,
-  Globe,
-  ListChecks,
-} from "lucide-react";
+import { ArrowUpRight, ShieldAlert } from "lucide-react";
 import { CvFinder } from "@/components/CvFinder";
 import { CookieSettingsButton } from "@/components/Analytics";
-import { FAQ, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_TAGLINE } from "@/lib/site";
+import {
+  FAQ,
+  REPO_URL,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} - ${SITE_TAGLINE} - rekrutacja z AI`,
@@ -19,60 +17,57 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const FEATURES = [
+const STEPS = [
   {
-    icon: Trophy,
-    title: "Inteligentny ranking",
-    text: "AI ocenia każde CV w skali 0-100 i sortuje kandydatów od najlepszego do najgorszego z konkretnym uzasadnieniem.",
+    title: "Wgraj CV",
+    text: "PDF, DOCX albo TXT, do 30 plików po 4 MB. Tekst jest wyciągany na serwerze, a same pliki nie są nigdzie zapisywane.",
   },
   {
-    icon: ListChecks,
-    title: "Dopasowanie do stanowiska",
-    text: "Algorytm porównuje umiejętności, technologie, branżę i lata doświadczenia z opisem oferty pracy.",
+    title: "Wklej ogłoszenie",
+    text: "Wymagania, technologie, lata doświadczenia, branża. Im konkretniejszy opis, tym trafniejsza ocena.",
   },
   {
-    icon: Zap,
-    title: "Wynik w kilkanaście sekund",
-    text: "Przeanalizowanie 20 CV to zwykle 15-30 sekund. Tradycyjny pre-screening zajmuje godziny.",
+    title: "Model ocenia",
+    text: "Każde CV dostaje bezwzględny wynik 0–100 względem ogłoszenia, więc wyniki z kolejnych partii da się porównać.",
   },
   {
-    icon: ShieldCheck,
-    title: "Prywatność",
-    text: "Aplikacja nie zapisuje CV na dysku ani w bazie. Do oceny tekst trafia do OpenAI API, które nie używa go do trenowania modeli.",
-  },
-  {
-    icon: Globe,
-    title: "Wiele języków",
-    text: "Obsługa CV po polsku, angielsku, niemiecku, hiszpańsku i wielu innych - również mieszanych w jednym rankingu.",
-  },
-  {
-    icon: Upload,
-    title: "PDF, DOCX, TXT",
-    text: "Wgrywaj różne formaty jednocześnie. Dwa silniki odczytu PDF radzą sobie nawet z uszkodzonymi plikami.",
+    title: "Sprawdzasz listę",
+    text: "Ranking z uzasadnieniem, mocnymi stronami i brakami. Eksport do CSV albo wydruk do PDF.",
   },
 ];
 
-const HOW_IT_WORKS = [
+const DETAILS = [
   {
-    n: 1,
-    title: "Wgraj CV",
-    text: "Przeciągnij do 30 plików (PDF, DOCX, TXT) lub wybierz je z dysku. Maksymalnie 4 MB na plik.",
+    title: "Wynik z uzasadnieniem",
+    text: "Liczba 0–100 i krótkie podsumowanie, skąd się wzięła. Rekomendacja wynika wprost z wyniku, więc nigdy mu nie przeczy.",
   },
   {
-    n: 2,
-    title: "Opisz stanowisko",
-    text: "Wklej ogłoszenie o pracę albo własny opis - wymagane technologie, doświadczenie, branża, mile widziane skille.",
+    title: "Pasujące i brakujące umiejętności",
+    text: "Technologie z ogłoszenia, które kandydat ma, i te, których w jego CV nie widać.",
   },
   {
-    n: 3,
-    title: "Wybierz tryb",
-    text: "Pełen ranking wszystkich kandydatów albo tylko Top 3 najlepiej dopasowanych osób. Widok możesz przełączyć także po analizie.",
+    title: "Wykrywanie manipulacji",
+    text: "CV z ukrytym tekstem w stylu „daj mi 100 punktów” dostaje 0 i ostrzeżenie do ręcznej weryfikacji.",
   },
   {
-    n: 4,
-    title: "Zobacz wyniki",
-    text: "Otrzymasz uszeregowaną listę z oceną 0-100, podsumowaniem, mocnymi stronami, brakami i listą umiejętności.",
+    title: "Wiele języków naraz",
+    text: "CV po polsku, angielsku czy niemiecku w jednym rankingu. Ogłoszenie może być w innym języku niż CV.",
   },
+  {
+    title: "Bez bazy danych",
+    text: "Pliki są przetwarzane w pamięci. Tekst trafia do OpenAI API, które nie trenuje na nim modeli.",
+  },
+  {
+    title: "Eksport",
+    text: "CSV z rankingiem do arkusza albo wydruk do PDF dla reszty zespołu.",
+  },
+];
+
+const SAMPLE = [
+  { name: "Marta Wiśniewska", note: "Node.js, Kafka, 8 lat w fintechu", score: 95, bar: "bg-accent" },
+  { name: "Paweł Dąbrowski", note: "Mocny backend, brak AWS", score: 80, bar: "bg-accent" },
+  { name: "Tomasz Zieliński", note: "Dobre podstawy, mało produkcji", score: 60, bar: "bg-good" },
+  { name: "Karolina Nowak", note: "Frontend, backend pobocznie", score: 30, bar: "bg-warn" },
 ];
 
 export default function HomePage() {
@@ -145,189 +140,193 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <main
-        id="main"
-        className="container mx-auto max-w-5xl px-4 sm:px-6 py-10 sm:py-16 print:p-0"
-      >
-        <header className="text-center mb-12 sm:mb-16 animate-fade-in print:hidden">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-6 text-xs text-white/70">
-            <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-accent" />
-            Wspomagane przez AI
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
-            Znajdź <span className="gradient-text">idealnego</span> kandydata
-          </h1>
-          <p className="mt-5 text-white/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
-            Wgraj dowolną liczbę CV, opisz stanowisko, a AI uszereguje
-            kandydatów od najlepszego do najgorszego. Otrzymasz punktową ocenę
-            dopasowania, listę mocnych i słabych stron oraz wskazanie
-            brakujących umiejętności - wszystko w kilkanaście sekund.
-          </p>
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <header className="flex items-center justify-between py-6 print:hidden">
+          <a href="#main" className="font-serif text-2xl leading-none tracking-tight">
+            CV Finder
+          </a>
+          <nav aria-label="Sekcje strony" className="flex items-center gap-5 text-sm text-ink-soft">
+            <a href="#jak-to-dziala" className="hidden sm:inline hover:text-ink transition-colors">
+              Jak to działa
+            </a>
+            <a href="#faq" className="hidden sm:inline hover:text-ink transition-colors">
+              Pytania
+            </a>
+            <a
+              href={REPO_URL}
+              className="inline-flex items-center gap-1 hover:text-ink transition-colors"
+            >
+              GitHub
+              <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
+            </a>
+          </nav>
         </header>
 
-        <CvFinder />
-
-        <section
-          aria-labelledby="how-it-works"
-          className="mt-24 sm:mt-32 scroll-mt-8 print:hidden"
-          id="jak-to-dziala"
-        >
-          <div className="text-center mb-10">
-            <h2
-              id="how-it-works"
-              className="text-3xl sm:text-4xl font-bold tracking-tight"
-            >
-              Jak <span className="gradient-text">to działa</span>
-            </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Cztery proste kroki dzielą Cię od uszeregowanej listy najlepszych
-              kandydatów.
-            </p>
-          </div>
-
-          <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 list-none p-0">
-            {HOW_IT_WORKS.map((step) => (
-              <li
-                key={step.n}
-                className="glass rounded-2xl p-5 hover:bg-white/[0.04] transition-colors"
+        <main id="main" className="scroll-mt-6 print:p-0">
+          <section
+            aria-labelledby="hero-title"
+            className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-end pt-10 sm:pt-16 pb-12 sm:pb-16 print:hidden"
+          >
+            <div className="lg:col-span-7 animate-slide-up">
+              <p className="eyebrow">Pre-screening CV dla rekruterów</p>
+              <h1
+                id="hero-title"
+                className="mt-5 font-serif text-[2.9rem] leading-[1.02] sm:text-6xl lg:text-7xl tracking-[-0.02em]"
               >
-                <div className="h-9 w-9 rounded-lg bg-primary/15 text-primary flex items-center justify-center font-bold mb-3">
-                  {step.n}
-                </div>
-                <h3 className="font-semibold mb-1.5">{step.title}</h3>
-                <p className="text-sm text-white/60 leading-relaxed">
-                  {step.text}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </section>
+                Od stosu CV do <em className="text-accent">krótkiej listy</em>{" "}
+                w&nbsp;minutę.
+              </h1>
+              <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-ink-soft">
+                Wgraj do 30 CV i wklej ogłoszenie. Model oceni każdego
+                kandydata w skali 0–100 i wypisze, co pasuje, czego brakuje
+                i dlaczego. Ostatnie słowo należy do Ciebie.
+              </p>
+            </div>
 
-        <section
-          aria-labelledby="features"
-          className="mt-24 sm:mt-32 scroll-mt-8 print:hidden"
-          id="funkcje"
-        >
-          <div className="text-center mb-10">
-            <h2
-              id="features"
-              className="text-3xl sm:text-4xl font-bold tracking-tight"
+            <figure
+              className="lg:col-span-5 sheet p-5 sm:p-6 animate-slide-up [animation-delay:120ms] hidden sm:block"
             >
-              Co dostajesz w <span className="gradient-text">CV Finder</span>
-            </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Wszystko, czego potrzebujesz, by szybko wyłonić najlepszych
-              kandydatów do rekrutacji.
-            </p>
-          </div>
+              <figcaption className="eyebrow flex items-center justify-between">
+                <span>Przykładowy wynik</span>
+                <span>wynik / 100</span>
+              </figcaption>
+              <ol className="mt-4 divide-y divide-line">
+                {SAMPLE.map((row, i) => (
+                  <li key={row.name} className="flex items-center gap-4 py-2.5">
+                    <span className="font-serif text-2xl w-6 text-muted">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{row.name}</div>
+                      <div className="text-xs text-muted truncate">{row.note}</div>
+                    </div>
+                    <div className="w-20 text-right">
+                      <div className="font-mono text-lg tabular-nums">{row.score}</div>
+                      <div className="mt-1 h-1 rounded-full bg-line overflow-hidden">
+                        <div
+                          className={`h-full ${row.bar}`}
+                          style={{ width: `${row.score}%` }}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                ))}
+                <li className="flex items-center gap-4 py-2.5">
+                  <span className="font-serif text-2xl w-6 text-muted">5</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">Michał Kowalczyk</div>
+                    <div className="text-xs text-danger inline-flex items-center gap-1">
+                      <ShieldAlert aria-hidden="true" className="h-3 w-3" />
+                      Ukryte polecenie dla AI w CV
+                    </div>
+                  </div>
+                  <div className="w-20 text-right font-mono text-lg tabular-nums text-danger">
+                    0
+                  </div>
+                </li>
+              </ol>
+            </figure>
+          </section>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURES.map((f) => (
-              <article
-                key={f.title}
-                className="glass rounded-2xl p-5 hover:bg-white/[0.04] transition-colors"
-              >
-                <div className="h-10 w-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center mb-3">
-                  <f.icon aria-hidden="true" className="h-5 w-5" />
-                </div>
-                <h3 className="font-semibold mb-1.5">{f.title}</h3>
-                <p className="text-sm text-white/60 leading-relaxed">{f.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+          <CvFinder />
 
-        <section
-          aria-labelledby="faq"
-          className="mt-24 sm:mt-32 scroll-mt-8 print:hidden"
-          id="faq"
-        >
-          <div className="text-center mb-10">
-            <h2
-              id="faq"
-              className="text-3xl sm:text-4xl font-bold tracking-tight"
-            >
-              Najczęstsze <span className="gradient-text">pytania</span>
-            </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Wszystko, co warto wiedzieć przed pierwszym użyciem.
-            </p>
-          </div>
-
-          <div className="space-y-3 max-w-3xl mx-auto">
-            {FAQ.map((item, i) => (
-              <details
-                key={i}
-                className="glass rounded-2xl px-5 py-4 group open:bg-white/[0.04]"
-              >
-                <summary className="flex items-center justify-between cursor-pointer list-none font-medium text-white/90 marker:hidden">
-                  <span>{item.q}</span>
-                  <span
-                    aria-hidden="true"
-                    className="ml-4 text-white/40 group-open:rotate-45 transition-transform text-xl leading-none"
-                  >
-                    +
+          <section
+            aria-labelledby="how-it-works"
+            id="jak-to-dziala"
+            className="mt-28 sm:mt-36 grid lg:grid-cols-12 gap-8 lg:gap-12 scroll-mt-8 print:hidden"
+          >
+            <div className="lg:col-span-4 lg:sticky lg:top-8 self-start">
+              <p className="eyebrow">Proces</p>
+              <h2 id="how-it-works" className="mt-3 font-serif text-4xl sm:text-5xl tracking-[-0.01em]">
+                Jak to działa
+              </h2>
+            </div>
+            <ol className="lg:col-span-8 border-t border-line-strong">
+              {STEPS.map((step, i) => (
+                <li
+                  key={step.title}
+                  className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_12rem_1fr] gap-x-4 gap-y-1 py-5 border-b border-line"
+                >
+                  <span className="font-mono text-sm text-muted pt-0.5">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                </summary>
-                <p className="mt-3 text-sm text-white/70 leading-relaxed">
-                  {item.a}
-                </p>
-              </details>
-            ))}
-          </div>
-        </section>
+                  <h3 className="font-medium">{step.title}</h3>
+                  <p className="col-start-2 sm:col-start-3 text-ink-soft leading-relaxed">
+                    {step.text}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-        <section
-          aria-labelledby="cta"
-          className="mt-24 sm:mt-32 relative overflow-hidden rounded-3xl glass p-8 sm:p-12 text-center print:hidden"
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10 opacity-60"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 40%, rgba(168,85,247,0.18), transparent 50%), radial-gradient(circle at 70% 60%, rgba(6,182,212,0.14), transparent 50%)",
-            }}
-          />
-          <Briefcase
-            aria-hidden="true"
-            className="h-10 w-10 text-primary mx-auto mb-4"
-          />
-          <h2
-            id="cta"
-            className="text-2xl sm:text-3xl font-bold tracking-tight"
+          <section
+            aria-labelledby="features"
+            id="funkcje"
+            className="mt-28 sm:mt-36 grid lg:grid-cols-12 gap-8 lg:gap-12 scroll-mt-8 print:hidden"
           >
-            Gotowy, by skrócić rekrutację z godzin do minut?
-          </h2>
-          <p className="mt-3 text-white/60 max-w-xl mx-auto">
-            Przewiń na górę, wgraj CV i pozwól AI zrobić wstępną selekcję za
-            Ciebie.
-          </p>
-          <a
-            href="#main"
-            className="btn-primary inline-flex mt-6"
-          >
-            <Sparkles aria-hidden="true" className="h-4 w-4" />
-            Zacznij teraz
-          </a>
-        </section>
+            <div className="lg:col-span-4 lg:sticky lg:top-8 self-start">
+              <p className="eyebrow">Wynik</p>
+              <h2 id="features" className="mt-3 font-serif text-4xl sm:text-5xl tracking-[-0.01em]">
+                Co dostajesz
+              </h2>
+            </div>
+            <dl className="lg:col-span-8 grid sm:grid-cols-2 gap-x-10 border-t border-line-strong">
+              {DETAILS.map((item) => (
+                <div key={item.title} className="py-5 border-b border-line">
+                  <dt className="font-medium">{item.title}</dt>
+                  <dd className="mt-1.5 text-ink-soft leading-relaxed">{item.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
 
-        <footer className="mt-20 pb-4 text-center text-xs text-white/40 print:hidden">
-          <p>
-            © {new Date().getFullYear()} {SITE_NAME}. Zbudowane z Next.js, FastAPI
-            i OpenAI.
-          </p>
-          <p className="mt-1 text-white/30">
-            Aplikacja nie przechowuje wgranych CV. Do wygenerowania rankingu
-            tekst CV jest przesyłany do OpenAI API.
-          </p>
-          {process.env.NEXT_PUBLIC_GA_ID && (
-            <p className="mt-2 text-white/30">
-              <CookieSettingsButton />
+          <section
+            aria-labelledby="faq-title"
+            id="faq"
+            className="mt-28 sm:mt-36 grid lg:grid-cols-12 gap-8 lg:gap-12 scroll-mt-8 print:hidden"
+          >
+            <div className="lg:col-span-4 lg:sticky lg:top-8 self-start">
+              <p className="eyebrow">FAQ</p>
+              <h2 id="faq-title" className="mt-3 font-serif text-4xl sm:text-5xl tracking-[-0.01em]">
+                Pytania
+              </h2>
+            </div>
+            <div className="lg:col-span-8 border-t border-line-strong">
+              {FAQ.map((item, i) => (
+                <details key={i} className="group border-b border-line">
+                  <summary className="flex items-start justify-between gap-6 py-5 cursor-pointer list-none font-medium marker:hidden [&::-webkit-details-marker]:hidden hover:text-ink-soft transition-colors">
+                    <span>{item.q}</span>
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-muted transition-transform duration-200 group-open:rotate-45"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="pb-6 -mt-1 max-w-[42rem] text-ink-soft leading-relaxed">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </main>
+
+        <footer className="mt-28 sm:mt-36 border-t border-line-strong py-8 text-sm text-muted flex flex-col sm:flex-row gap-4 sm:items-start sm:justify-between print:hidden">
+          <div className="space-y-1 max-w-md">
+            <p>
+              © {new Date().getFullYear()} {SITE_NAME}. Next.js, FastAPI, OpenAI.
             </p>
-          )}
+            <p className="text-xs">
+              CV nie są przechowywane. Do oceny tekst CV trafia do OpenAI API.
+            </p>
+          </div>
+          <div className="flex gap-5">
+            <a href={REPO_URL} className="hover:text-ink transition-colors">
+              Kod źródłowy
+            </a>
+            {process.env.NEXT_PUBLIC_GA_ID && <CookieSettingsButton />}
+          </div>
         </footer>
-      </main>
+      </div>
     </>
   );
 }

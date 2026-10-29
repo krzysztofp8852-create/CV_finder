@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone, type FileRejection } from "react-dropzone";
-import { Upload, FileText, X, AlertCircle } from "lucide-react";
+import { FileUp, X, AlertCircle } from "lucide-react";
 import { clsx } from "clsx";
 import { MAX_FILES, MAX_FILE_SIZE, MAX_FILE_SIZE_LABEL } from "@/lib/limits";
 import { plural } from "@/lib/plural";
@@ -95,51 +95,42 @@ export function Dropzone({ files, onChange, disabled }: Props) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex-1 flex flex-col gap-4">
       <div
         {...getRootProps()}
         className={clsx(
-          "glass rounded-2xl border-2 border-dashed p-8 cursor-pointer transition-all text-center",
+          "flex-1 min-h-[11rem] flex flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-9 cursor-pointer transition duration-200 text-center",
           isDragActive
-            ? "border-primary bg-primary/5 scale-[1.01]"
-            : "border-white/10 hover:border-white/20",
+            ? "border-accent bg-accent-soft/70"
+            : "border-line-strong bg-paper/60 hover:border-ink/40 hover:bg-paper",
           disabled && "opacity-50 cursor-not-allowed"
         )}
       >
         <input {...getInputProps()} />
-        <div className="flex flex-col items-center gap-3">
-          <div className="rounded-full bg-primary/10 p-4">
-            <Upload className="h-7 w-7 text-primary" />
-          </div>
-          <div>
-            <p className="text-lg font-medium">
-              {isDragActive
-                ? "Upuść pliki tutaj…"
-                : "Przeciągnij CV lub kliknij, aby wybrać"}
-            </p>
-            <p className="text-sm text-white/50 mt-1">
-              PDF, DOCX lub TXT • do {MAX_FILE_SIZE_LABEL} na plik • do {MAX_FILES}{" "}
-              plików
-            </p>
-          </div>
-        </div>
+        <FileUp aria-hidden="true" className="h-6 w-6 text-ink-soft" strokeWidth={1.5} />
+        <p className="mt-3 font-medium">
+          {isDragActive ? "Upuść pliki tutaj" : "Przeciągnij CV albo kliknij, żeby wybrać"}
+        </p>
+        <p className="mt-1.5 font-mono text-xs text-muted text-balance">
+          PDF · DOCX · TXT, do {MAX_FILE_SIZE_LABEL}, maks. {MAX_FILES} plików
+        </p>
       </div>
 
       {rejected.length > 0 && (
         <div
           role="alert"
-          className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 flex items-start gap-3 animate-fade-in"
+          className="rounded-xl border border-warn/25 bg-warn-soft px-4 py-3 flex items-start gap-3 animate-fade-in"
         >
           <AlertCircle
             aria-hidden="true"
-            className="h-5 w-5 text-amber-400 shrink-0 mt-0.5"
+            className="h-5 w-5 text-warn shrink-0 mt-0.5"
           />
-          <div className="text-sm text-amber-100/90 min-w-0 flex-1">
+          <div className="text-sm text-ink min-w-0 flex-1">
             <div className="font-medium">
               Nie dodano {rejected.length}{" "}
               {plural(rejected.length, "pliku", "plików", "plików")}:
             </div>
-            <ul className="text-xs text-amber-100/70 space-y-1 mt-1">
+            <ul className="text-xs text-ink-soft space-y-1 mt-1">
               {rejected.map((r, i) => (
                 <li key={i} className="break-words">
                   <span className="font-medium">{r.fileName}</span> — {r.reason}
@@ -150,19 +141,19 @@ export function Dropzone({ files, onChange, disabled }: Props) {
           <button
             type="button"
             onClick={() => setRejected([])}
-            className="p-1 rounded-md hover:bg-white/10 shrink-0"
+            className="p-1 rounded-md hover:bg-ink/5 shrink-0"
             aria-label="Zamknij komunikat"
           >
-            <X className="h-4 w-4 text-white/60" />
+            <X className="h-4 w-4 text-ink-soft" />
           </button>
         </div>
       )}
 
       {files.length > 0 && (
-        <div className="space-y-2 animate-fade-in">
-          <div className="flex items-center justify-between text-sm text-white/60 px-1">
-            <span>
-              Wgrane CV: {files.length} / {MAX_FILES}
+        <div className="animate-fade-in">
+          <div className="flex items-center justify-between text-sm px-1 mb-1">
+            <span className="text-ink-soft">
+              Wgrane: <span className="font-mono tabular-nums">{files.length}/{MAX_FILES}</span>
             </span>
             <button
               type="button"
@@ -171,37 +162,32 @@ export function Dropzone({ files, onChange, disabled }: Props) {
                 setRejected([]);
               }}
               disabled={disabled}
-              className="text-white/40 hover:text-white/80 transition-colors disabled:opacity-30"
+              className="btn-text"
             >
-              Wyczyść wszystkie
+              Usuń wszystkie
             </button>
           </div>
-          <ul className="space-y-2 max-h-64 overflow-y-auto pr-1">
-            {files.map(({ id, file: f }) => {
-              return (
-                <li
-                  key={id}
-                  className="glass rounded-xl px-4 py-3 flex items-center gap-3 group"
+          <ul className="max-h-64 overflow-y-auto divide-y divide-line border-y border-line">
+            {files.map(({ id, file: f }) => (
+              <li key={id} className="flex items-center gap-3 px-1 py-2.5 group">
+                <span className="font-mono text-[10px] uppercase text-muted w-9 shrink-0">
+                  {f.name.split(".").pop()?.slice(0, 4)}
+                </span>
+                <p className="flex-1 min-w-0 truncate text-sm">{f.name}</p>
+                <span className="font-mono text-xs text-muted tabular-nums shrink-0">
+                  {formatSize(f.size)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => removeFile(id)}
+                  disabled={disabled}
+                  className="reveal-on-hover transition-opacity p-1 rounded-md hover:bg-ink/5 disabled:opacity-30"
+                  aria-label={`Usuń ${f.name}`}
                 >
-                  <div className="rounded-lg bg-white/5 p-2">
-                    <FileText className="h-4 w-4 text-accent" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate text-sm font-medium">{f.name}</p>
-                    <p className="text-xs text-white/40">{formatSize(f.size)}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(id)}
-                    disabled={disabled}
-                    className="reveal-on-hover transition-opacity p-1 rounded-md hover:bg-white/10 disabled:opacity-30"
-                    aria-label={`Usuń ${f.name}`}
-                  >
-                    <X className="h-4 w-4 text-white/60" />
-                  </button>
-                </li>
-              );
-            })}
+                  <X className="h-4 w-4 text-ink-soft" />
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
       )}
