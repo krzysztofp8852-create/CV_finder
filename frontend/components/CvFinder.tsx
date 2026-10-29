@@ -427,7 +427,11 @@ export function CvFinder() {
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="btn-primary whitespace-nowrap sm:min-w-[15rem] py-3.5"
+                aria-busy={loading}
+                className={clsx(
+                  "btn-primary whitespace-nowrap sm:min-w-[15rem] py-3.5",
+                  loading && "disabled:bg-ink disabled:cursor-progress"
+                )}
               >
                 {loading ? (
                   <>

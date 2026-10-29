@@ -154,7 +154,7 @@ Wdrożenie i konfiguracja SEO (Vercel, Search Console) są opisane w [`docs/DEPL
 
 ## Ograniczenia i dalsze kroki
 
-Model wciąż się myli. Na nagraniu powyżej wpisuje Pawłowi jako słabą stronę „brak doświadczenia w AWS lub GCP”, choć jego CV mówi o wdrożeniach na GCP. Systematyczne wyłapywanie takich błędów to zadanie pierwszego punktu poniżej.
+Model wciąż się myli. Na nagraniu powyżej wpisuje Tomaszowi jako słabą stronę „brak doświadczenia z CI/CD, Docker, Kubernetes”, choć jego CV wymienia Dockera i Jenkinsa, a Dockera jednocześnie zalicza mu do pasujących umiejętności. Systematyczne wyłapywanie takich błędów to zadanie pierwszego punktu poniżej.
 
 Co zrobiłbym dalej, mniej więcej w tej kolejności:
 

@@ -154,7 +154,7 @@ Deployment and SEO setup (Vercel, Search Console) are described in [`docs/DEPLOY
 
 ## Limitations and next steps
 
-The model still makes mistakes. In the recording above it lists "no AWS or GCP experience" as a weakness for Paweł, whose CV says he deploys to GCP. Catching errors like this systematically is what the first item below is for.
+The model still makes mistakes. In the recording above it lists "no CI/CD, Docker or Kubernetes experience" as a weakness for Tomasz, whose CV lists Docker and Jenkins, and it even puts Docker among his matched skills at the same time. Catching errors like this systematically is what the first item below is for.
 
 What I'd build next, roughly in order:
 

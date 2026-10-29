@@ -65,9 +65,9 @@ const DETAILS = [
 
 const SAMPLE = [
   { name: "Marta Wiśniewska", note: "Node.js, Kafka, 8 lat w fintechu", score: 95, bar: "bg-accent" },
-  { name: "Paweł Dąbrowski", note: "Mocny backend, brak AWS", score: 80, bar: "bg-accent" },
-  { name: "Tomasz Zieliński", note: "Dobre podstawy, mało produkcji", score: 60, bar: "bg-good" },
-  { name: "Karolina Nowak", note: "Frontend, backend pobocznie", score: 30, bar: "bg-warn" },
+  { name: "Paweł Dąbrowski", note: "3,5 roku Node.js, brak AWS", score: 75, bar: "bg-good" },
+  { name: "Tomasz Lewandowski", note: "Java i Spring, Node.js na start", score: 60, bar: "bg-good" },
+  { name: "Karolina Zając", note: "Frontend, React i TypeScript", score: 20, bar: "bg-danger" },
 ];
 
 export default function HomePage() {

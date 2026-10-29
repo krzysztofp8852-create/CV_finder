@@ -14,9 +14,9 @@ const ACCENT = "#2f6b4f";
 
 const ROWS = [
   { name: "Marta Wiśniewska", score: 95, color: ACCENT },
-  { name: "Paweł Dąbrowski", score: 80, color: ACCENT },
-  { name: "Tomasz Zieliński", score: 60, color: "#4b6a88" },
-  { name: "Karolina Nowak", score: 30, color: "#a06a1b" },
+  { name: "Paweł Dąbrowski", score: 75, color: "#4b6a88" },
+  { name: "Tomasz Lewandowski", score: 60, color: "#4b6a88" },
+  { name: "Karolina Zając", score: 20, color: "#a33a2c" },
 ];
 
 export default function OpenGraphImage() {
